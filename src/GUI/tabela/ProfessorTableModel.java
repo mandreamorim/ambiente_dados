@@ -1,21 +1,24 @@
 package GUI.tabela;
 
 import Objects.Disciplina;
+import Objects.Professor;
+
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
+
 import static util.Util.getProfessorNameFromId;
 
-public class DisciplinasTableModel extends AbstractTableModel {
-    private final String[] colunas = {"ID da disciplina","Nome do professor responsável", "Nome da disciplina"};
-    private final ArrayList<Disciplina> disciplinas;
+public class ProfessorTableModel extends AbstractTableModel {
+    private final String[] colunas = {"ID do professor", "Nome do professor"};
+    private final ArrayList<Professor> professores;
 
-    public DisciplinasTableModel(ArrayList<Disciplina> d) {
-        this.disciplinas = d;
+    public ProfessorTableModel(ArrayList<Professor> d) {
+        this.professores = d;
     }
 
     @Override
     public int getRowCount() {
-        return disciplinas.size();
+        return professores.size();
     }
 
     @Override
@@ -30,11 +33,10 @@ public class DisciplinasTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Disciplina disciplina = disciplinas.get(rowIndex);
+        Professor professor = professores.get(rowIndex);
         return switch (columnIndex) {
-            case 0 -> disciplina.id;
-            case 1 -> getProfessorNameFromId(disciplina.id_professor);
-            case 2 -> disciplina.nome;
+            case 0 -> professor.id;
+            case 1 -> professor.nome_professor;
             default -> null;
         };
     }

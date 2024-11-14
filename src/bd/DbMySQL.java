@@ -1,14 +1,6 @@
 package bd;
 
-import Objects.Disciplina;
-import Objects.Nota;
-import user.UserSession;
-
 import java.sql.*;
-import java.util.ArrayList;
-
-import static util.Util.resultSetIntoDisciplinasArrayList;
-import static util.Util.resultSetIntoNotasArrayList;
 
 public class DbMySQL {
     static String url = "jdbc:mysql://localhost:3306/estrutura_de_dados_q1";
@@ -113,38 +105,5 @@ public class DbMySQL {
         }
 
         return null;
-    }
-
-    public static ArrayList<Nota> getNotasFromDisciplina(){
-
-        StatementResultSet result = DbMySQL.getAllFrom("notas");
-
-        ArrayList<Nota> notasList = resultSetIntoNotasArrayList(result.resultSet);
-
-        result.closeAll();
-        return notasList;
-    }
-
-    public static ArrayList<Nota> getNotasFromDisciplina(Disciplina d){
-        //TODO
-        String cond = "id_disciplina = " + d.id;
-        StatementResultSet result = DbMySQL.getAllCond("notas", cond);
-
-        ArrayList<Nota> notasList = resultSetIntoNotasArrayList(result.resultSet);
-
-        result.closeAll();
-        return notasList;
-    }
-
-    public static ArrayList<Disciplina> getDisciplines(){
-        if(UserSession.availableDisciplines == null){
-            StatementResultSet result = DbMySQL.getAllFrom("disciplina");
-
-            ArrayList<Disciplina>disciplinesList = resultSetIntoDisciplinasArrayList(result.resultSet);
-            UserSession.saveAvailableDisciplines(disciplinesList);
-
-            result.closeAll();
-        }
-        return UserSession.availableDisciplines;
     }
 }

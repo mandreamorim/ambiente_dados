@@ -31,6 +31,7 @@ public class LoginPage extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 loginHandler();
+//                callMenu();
             }
         });
     }
@@ -54,6 +55,10 @@ public class LoginPage extends JFrame {
 
         dispose();
 
+        callMenu();
+    }
+
+    private void callMenu(){
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {

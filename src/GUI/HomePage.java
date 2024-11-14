@@ -4,9 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import static bd.DbMySQL.*;
 import static util.Table.populateTable;
+import static util.Util.*;
 
 public class HomePage extends JFrame {
 
@@ -31,20 +30,38 @@ public class HomePage extends JFrame {
         button2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                populateTable(scroll, getNotasFromDisciplina());
+                tableAllNotas();
             }
         });
         button4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                populateTable(scroll, getDisciplines());
+                tableAllDisciplinas();
             }
         });
         button5.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                populateTable(scroll, getNotasFromDisciplina(getDisciplines().getFirst()));
+                tableAllProfessores();
             }
         });
+        button3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+    }
+
+    private void tableAllNotas(){
+        populateTable(scroll, getNotasFromDisciplina());
+    }
+
+    private void tableAllProfessores(){
+        populateTable(scroll, getProfessores());
+    }
+
+    private void tableAllDisciplinas(){
+        populateTable(scroll, getDisciplines());
     }
 }

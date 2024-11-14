@@ -2,7 +2,10 @@ package util;
 
 import Objects.Disciplina;
 import Objects.Nota;
+import Objects.Professor;
+import bd.DbMySQL;
 import bd.StatementResultSet;
+import user.UserSession;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -45,24 +48,100 @@ public class Util {
         return arrayList;
     }
 
-    public static String getProfessorNameFromId(int id){
-        return getProfessorNameFromResultSet(
-                Objects.requireNonNull(
-                        getFieldFrom(
-                                "professor",
-                                "nome_professor",
-                                "id = " + id)));
-    }
-
-    public static String getProfessorNameFromResultSet(StatementResultSet in){
-        String str = "";
+    public static ArrayList<Professor> resultSetIntoProfessorArrayList(ResultSet resultSet){
+        ArrayList<Professor> arrayList = new ArrayList<Professor>();
         try{
-            while (in.resultSet.next()){
-                str = in.resultSet.getString("nome_professor");
+            while (resultSet.next()){
+                int id = resultSet.getInt("id");
+                int id_p = resultSet.getInt("id_login");
+                String nome = resultSet.getString("nome_professor");
+                arrayList.add(new Professor(id, id_p, nome));
             }
         } catch (SQLException e) {
             //TODO
         }
+        return arrayList;
+    }
+
+    public static String getProfessorNameFromId(int id){
+        return getStringResultFromResultSet(
+                Objects.requireNonNull(
+                        getFieldFrom(
+                                "professor",
+                                "nome_professor",
+                                "id = " + id)), "nome_professor");
+    }
+
+    public static String getStringResultFromResultSet(StatementResultSet in, String campo){
+        String str = "";
+        try{
+            while (in.resultSet.next()){
+                str = in.resultSet.getString(campo);
+            }
+        } catch (SQLException e) {
+            //TODO
+        }
+        in.closeAll();
         return str;
+    }
+
+    public static String getAlunoNameFromId(int id){
+        return getStringResultFromResultSet(
+                Objects.requireNonNull(
+                        getFieldFrom("aluno",
+                            "nome_aluno",
+                            "id = " + id)),
+                            "nome_aluno");
+    }
+
+    public static String getDisciplineNameFromId(int id){
+        return getStringResultFromResultSet(
+                Objects.requireNonNull(
+                        getFieldFrom("disciplina",
+                                "nome_disciplina",
+                                "id = " + id)),
+                "nome_disciplina");
+    }
+
+    public static ArrayList<Nota> getNotasFromDisciplina(){
+
+        StatementResultSet result = DbMySQL.getAllFrom("notas");
+
+        ArrayList<Nota> notasList = resultSetIntoNotasArrayList(result.resultSet);
+
+        result.closeAll();
+        return notasList;
+    }
+
+    public static ArrayList<Nota> getNotasFromDisciplina(Disciplina d){
+        //TODO
+        String cond = "id_disciplina = " + d.id;
+        StatementResultSet result = DbMySQL.getAllCond("notas", cond);
+
+        ArrayList<Nota> notasList = resultSetIntoNotasArrayList(result.resultSet);
+
+        result.closeAll();
+        return notasList;
+    }
+
+    public static ArrayList<Disciplina> getDisciplines(){
+        if(UserSession.availableDisciplines == null){
+            StatementResultSet result = DbMySQL.getAllFrom("disciplina");
+
+            ArrayList<Disciplina>disciplinesList = resultSetIntoDisciplinasArrayList(result.resultSet);
+            UserSession.saveAvailableDisciplines(disciplinesList);
+
+            result.closeAll();
+        }
+        return UserSession.availableDisciplines;
+    }
+
+    public static ArrayList<Professor> getProfessores(){
+        StatementResultSet result = DbMySQL.getAllFrom("professor");
+
+        ArrayList<Professor> professorArrayList = resultSetIntoProfessorArrayList(result.resultSet);
+
+        result.closeAll();
+        return professorArrayList;
     }
 }

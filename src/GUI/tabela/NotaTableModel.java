@@ -5,9 +5,12 @@ import Objects.Nota;
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 
+import static util.Util.getAlunoNameFromId;
+import static util.Util.getDisciplineNameFromId;
+
 public class NotaTableModel extends AbstractTableModel {
 
-    private final String[] colunas = {"ID Aluno", "ID Disciplina", "Nota", "Data"};
+    private final String[] colunas = {"Aluno", "Disciplina", "Nota", "Data"};
     private final ArrayList<Nota> notas;
 
     public NotaTableModel(ArrayList<Nota> notas) {
@@ -33,8 +36,8 @@ public class NotaTableModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         Nota nota = notas.get(rowIndex);
         return switch (columnIndex) {
-            case 0 -> nota.id_aluno;
-            case 1 -> nota.id_disciplina;
+            case 0 -> getAlunoNameFromId(nota.id_aluno);
+            case 1 -> getDisciplineNameFromId(nota.id_disciplina);
             case 2 -> nota.nota;
             case 3 -> nota.data;
             default -> null;
