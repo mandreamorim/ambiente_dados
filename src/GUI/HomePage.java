@@ -1,13 +1,17 @@
 package GUI;
 
+import Objects.Aluno;
+import Objects.Disciplina;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Objects;
+
 import static util.Table.populateTable;
 import static util.Util.*;
 
-public class HomePage extends JFrame {
+public class HomePage extends Nimbus {
 
     private JPanel homePage;
     private JTable table1;
@@ -17,6 +21,10 @@ public class HomePage extends JFrame {
     private JButton button5;
     private JComboBox comboBox1;
     private JScrollPane scroll;
+    private JScrollPane buttons;
+    private JComboBox comboBox2;
+    private JButton editarNotaButton;
+    private JButton adicionarNotaButton;
 
     public HomePage() {
         setContentPane(homePage);
@@ -27,6 +35,16 @@ public class HomePage extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
         setVisible(true);
+
+
+        for(Aluno aluno: getAllAluno()){
+            comboBox2.addItem(aluno.nome);
+        }
+
+        for (Disciplina disciplina: getDisciplines()){
+            comboBox1.addItem(disciplina.nome);
+        }
+
         button2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -48,7 +66,43 @@ public class HomePage extends JFrame {
         button3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                tableAllAlunos();
+            }
+        });
+        comboBox2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedAluno = Objects.requireNonNull(comboBox2.getSelectedItem()).toString();
+                populateTable(scroll, resultSetIntoNotasArrayList(getNotasFromAlunoId(getAlunoIdFromAlunoName(selectedAluno)).resultSet));
+            }
+        });
+        comboBox1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedDisciplina = Objects.requireNonNull(comboBox1.getSelectedItem()).toString();
+                populateTable(scroll, getNotasArrayListFromDisciplinaId(getDisciplinaIdFromDisciplinaName(selectedDisciplina)));
+            }
+        });
+        editarNotaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        EditAluno edit = new EditAluno();
+                    }
+                });
+            }
+        });
+        adicionarNotaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        AddAluno add = new AddAluno();
+                    }
+                });
             }
         });
     }
@@ -63,5 +117,9 @@ public class HomePage extends JFrame {
 
     private void tableAllDisciplinas(){
         populateTable(scroll, getDisciplines());
+    }
+
+    private void tableAllAlunos(){
+        populateTable(scroll, getAllAluno());
     }
 }

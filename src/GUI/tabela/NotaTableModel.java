@@ -5,12 +5,11 @@ import Objects.Nota;
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 
-import static util.Util.getAlunoNameFromId;
-import static util.Util.getDisciplineNameFromId;
+import static util.Util.*;
 
 public class NotaTableModel extends AbstractTableModel {
 
-    private final String[] colunas = {"Aluno", "Disciplina", "Nota", "Data"};
+    private final String[] colunas = {"Aluno", "Disciplina", "Tipo","Nota", "Data"};
     private final ArrayList<Nota> notas;
 
     public NotaTableModel(ArrayList<Nota> notas) {
@@ -38,8 +37,9 @@ public class NotaTableModel extends AbstractTableModel {
         return switch (columnIndex) {
             case 0 -> getAlunoNameFromId(nota.id_aluno);
             case 1 -> getDisciplineNameFromId(nota.id_disciplina);
-            case 2 -> nota.nota;
-            case 3 -> nota.data;
+            case 2 -> translateTipo(nota.tipo);
+            case 3 -> nota.nota;
+            case 4 -> nota.data;
             default -> null;
         };
     }

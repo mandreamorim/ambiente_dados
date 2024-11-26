@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 
-public class LoginPage extends JFrame {
+public class LoginPage extends Nimbus {
     private JTextField username;
     private JPasswordField password;
     private JButton loginButton;
