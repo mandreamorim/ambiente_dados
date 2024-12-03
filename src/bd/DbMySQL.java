@@ -10,28 +10,8 @@ public class DbMySQL {
     static String url = "jdbc:mysql://localhost:3306/estrutura_de_dados_q1";
     static String user = "root"; // Seu nome de usuário
     static String password = "1234"; // Sua senha
+
     static Connection connection;
-
-    public static void main(String[] args) {
-        try {
-            Connection con = getConnection();
-
-
-            StatementResultSet statementResultSet = getAllFrom("logins");
-
-            // Processa o resultado da consulta
-            while (statementResultSet.resultSet.next()) {
-                System.out.println("Dado: " + statementResultSet.resultSet.getString("senha"));
-            }
-
-            // Fecha recursos
-            statementResultSet.closeAll();
-            closeConnection();
-
-        } catch (SQLException e) {
-            System.out.println("Erro de conexão: " + e.getMessage());
-        }
-    }
 
     public static Connection getConnection() {
         if(connection == null) {
@@ -196,5 +176,21 @@ public class DbMySQL {
             JOptionPane.showMessageDialog(jpanel, "Erro: " + e.getMessage());
             return false;
         }
+    }
+
+    public static void createTableVinicius(){
+        String query = "create table if not exists pessoa(idade int, nome varchar(30), altura int)";
+
+        try{
+            Connection conn = getConnection();
+            PreparedStatement s = conn.prepareStatement(query);
+            s.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void main(String[] args) {
+        createTableVinicius();
     }
 }

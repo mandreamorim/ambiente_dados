@@ -32,7 +32,7 @@ public class AddAluno extends Nimbus {
     public AddAluno() {
         setContentPane(homePage);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        setTitle("Adicionar aluno");
+        setTitle("Adicionar nota");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(screenSize.width * 5 / 10, screenSize.height * 5 / 10);
         setLocationRelativeTo(null);
