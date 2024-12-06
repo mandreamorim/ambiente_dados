@@ -1,12 +1,8 @@
 package GUI.tabela;
 
 import Objects.Aluno;
-import Objects.Disciplina;
-
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
-
-import static util.Util.getProfessorNameFromId;
 
 public class AlunoTableModel extends AbstractTableModel {
     private final String[] colunas = {"ID do aluno","Nome do aluno", "Data de nascimento"};
@@ -41,4 +37,6 @@ public class AlunoTableModel extends AbstractTableModel {
             default -> null;
         };
     }
+
+
 }
