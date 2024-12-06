@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
 public class DbMySQL {
     static String url = "jdbc:mysql://localhost:3306/quest3";
     static String user = "root"; // Seu nome de usuário
-    static String password = "Kopf08091965."; // Sua senha
+    static String password = "1234"; // Sua senha
     static Connection connection;
 
     public static Connection getConnection() {
