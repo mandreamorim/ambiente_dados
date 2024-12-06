@@ -2,9 +2,9 @@ package util;
 
 import GUI.tabela.*;
 import Objects.Aluno;
-import Objects.Disciplina;
-import Objects.Nota;
-import Objects.Professor;
+import Objects.Bibliotecario;
+import Objects.Emprestimo;
+import Objects.Livro;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -13,12 +13,12 @@ public class Table {
     public static void populateTable(JScrollPane scroll, ArrayList<?> lista){
         JTable pointer;
         try{
-            if (lista.getFirst() instanceof Nota) {
-                pointer = new JTable(new NotaTableModel((ArrayList<Nota>) lista));
-            } else if (lista.getFirst() instanceof Disciplina) {
-                pointer = new JTable(new DisciplinasTableModel((ArrayList<Disciplina>) lista));
-            } else if (lista.getFirst() instanceof Professor) {
-                pointer = new JTable(new ProfessorTableModel((ArrayList<Professor>) lista));
+            if (lista.getFirst() instanceof Emprestimo) {
+                pointer = new JTable(new EmprestimosTableModel((ArrayList<Emprestimo>) lista));
+            } else if (lista.getFirst() instanceof Bibliotecario) {
+                pointer = new JTable(new BibliotecariosTableModel((ArrayList<Bibliotecario>) lista));
+            } else if (lista.getFirst() instanceof Livro) {
+                pointer = new JTable(new LivrosTableModel((ArrayList<Livro>) lista));
             } else if (lista.getFirst() instanceof Aluno) {
                 pointer = new JTable(new AlunoTableModel((ArrayList<Aluno>) lista));
             } else {

@@ -1,13 +1,12 @@
 package GUI;
 
-import bd.DbMySQL;
-import user.UserSession;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
+
+import static bd.DbMySQL.*;
 
 public class LoginPage extends Nimbus {
     private JTextField username;
@@ -23,20 +22,22 @@ public class LoginPage extends Nimbus {
         setSize(screenSize.width/3, screenSize.height/3);
         setLocationRelativeTo(null);
         setResizable(false);
-        setVisible(true);
-
-
 
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                loginHandler();
-//                callMenu();
+                try {
+                    loginHandler();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
+
+        setVisible(true);
     }
 
-    private void loginHandler(){
+    private void loginHandler() throws SQLException {
         String pswd = new String(password.getPassword()).trim();
         String user = username.getText().trim();
 
@@ -48,7 +49,6 @@ public class LoginPage extends Nimbus {
 
         if(!checkLoginData(user, pswd)) {
             //TODO
-            UserSession.saveLoginId(-1);
             JOptionPane.showMessageDialog(this, "Invalid username or password");
             return;
         }
@@ -67,29 +67,9 @@ public class LoginPage extends Nimbus {
         });
     }
 
-    private boolean checkLoginData(String user, String pswd) {
-        String query = "SELECT id FROM logins WHERE username = ? AND senha = ?";
-
-        try{
-            Connection connection = DbMySQL.getConnection();
-            PreparedStatement statement = connection.prepareStatement(query);
-
-            statement.setString(1, user);
-            statement.setString(2, pswd);
-
-
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if(resultSet.next()) {
-                    UserSession.saveLoginId(resultSet.getInt("id"));
-                    return true;
-                }
-                return false;
-            }
-
-        } catch (SQLException e) {
-            System.out.println("Erro ao acessar o banco de dados: " + e.getMessage());
-            return false;
-        }
+    private boolean checkLoginData(String user, String pswd) throws SQLException {
+        ResultSet response = getAllCond("login", "usuario = '" + user + "' and senha = '" + pswd + "'").resultSet;
+        return response.next();
     }
 
     private boolean checkInvalidPasswordInput(String pswd) {

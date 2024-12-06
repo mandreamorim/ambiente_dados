@@ -1,35 +1,37 @@
 package GUI;
 
 import Objects.Aluno;
-import Objects.Disciplina;
+import Objects.Livro;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
 import java.util.Objects;
 
 import static util.Table.populateTable;
 import static util.Util.*;
+import static bd.DbMySQL.*;
 
 public class HomePage extends Nimbus {
 
     private JPanel homePage;
     private JTable table1;
-    private JButton button2;
-    private JButton button3;
-    private JButton button4;
-    private JButton button5;
+    private JButton locacoes;
+    private JButton alunos;
+    private JButton livros;
+    private JButton bibliotecario;
     private JComboBox comboBox1;
     private JScrollPane scroll;
     private JScrollPane buttons;
     private JComboBox comboBox2;
-    private JButton editarNotaButton;
-    private JButton adicionarNotaButton;
+    private JButton devolverButton;
+    private JButton alugarButton;
 
     public HomePage() {
         setContentPane(homePage);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        setTitle("Sistema de notas do professor maluco");
+        setTitle("Biblioteca do professor maluco");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(screenSize.width * 8 / 10, screenSize.height * 8 / 10);
         setLocationRelativeTo(null);
@@ -41,29 +43,29 @@ public class HomePage extends Nimbus {
             comboBox2.addItem(aluno.nome);
         }
 
-        for (Disciplina disciplina: getDisciplines()){
-            comboBox1.addItem(disciplina.nome);
+        for(Livro livro: getAllLivros()){
+            comboBox1.addItem(livro.titulo);
         }
 
-        button2.addActionListener(new ActionListener() {
+        locacoes.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                tableAllNotas();
+                tableAllLocacoes();
             }
         });
-        button4.addActionListener(new ActionListener() {
+        livros.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                tableAllDisciplinas();
+                tableAllLivros();
             }
         });
-        button5.addActionListener(new ActionListener() {
+        bibliotecario.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                tableAllProfessores();
+                tableAllBibliotecarios();
             }
         });
-        button3.addActionListener(new ActionListener() {
+        alunos.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 tableAllAlunos();
@@ -73,50 +75,54 @@ public class HomePage extends Nimbus {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String selectedAluno = Objects.requireNonNull(comboBox2.getSelectedItem()).toString();
-                populateTable(scroll, resultSetIntoNotasArrayList(getNotasFromAlunoId(getAlunoIdFromAlunoName(selectedAluno)).resultSet));
+                int id_aluno = getAlunoIdFromAlunoName(selectedAluno);
+                ResultSet response = getAllCond("emprestimo", "id_aluno = " + id_aluno).resultSet;
+                populateTable(scroll, resultSetIntoLocacoesArrayList(response));
             }
         });
         comboBox1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String selectedDisciplina = Objects.requireNonNull(comboBox1.getSelectedItem()).toString();
-                populateTable(scroll, getNotasArrayListFromDisciplinaId(getDisciplinaIdFromDisciplinaName(selectedDisciplina)));
+                String selectedLivro = Objects.requireNonNull(comboBox1.getSelectedItem()).toString();
+                int id_livro = getLivroIdFromLivroName(selectedLivro);
+                ResultSet response = getAllCond("emprestimo", "id_livro = " + id_livro).resultSet;
+                populateTable(scroll, resultSetIntoLocacoesArrayList(response));
             }
         });
-        editarNotaButton.addActionListener(new ActionListener() {
+        devolverButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        EditAluno edit = new EditAluno();
+                        DevolverLivro devolver = new DevolverLivro();
                     }
                 });
             }
         });
-        adicionarNotaButton.addActionListener(new ActionListener() {
+        alugarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        AddAluno add = new AddAluno();
+                        ReservarLivro reservar = new ReservarLivro();
                     }
                 });
             }
         });
     }
 
-    private void tableAllNotas(){
-        populateTable(scroll, getNotasFromDisciplina());
+    private void tableAllLocacoes(){
+        populateTable(scroll, getAllLocacoes());
     }
 
-    private void tableAllProfessores(){
-        populateTable(scroll, getProfessores());
+    private void tableAllBibliotecarios(){
+        populateTable(scroll, getAllBibliotecaios());
     }
 
-    private void tableAllDisciplinas(){
-        populateTable(scroll, getDisciplines());
+    private void tableAllLivros(){
+        populateTable(scroll, getAllLivros());
     }
 
     private void tableAllAlunos(){
